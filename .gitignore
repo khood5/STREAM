@@ -1,3 +1,31 @@
+##################
+# Data
+##################
+**/*.mp3
+**/*.mp4
+**/*.wav
+**/*.npy
+**/*.csv
+**/*.in
+**/*.out
+**/*.mat
+**/*.jpg
+**/*.fig
+**/*.eps
+**/tmp/**
+**/tmp.*
+**/*.xls 
+**/*.xlsx 
+**/*.xlsm 
+**/*.xlsb 
+**/*.xlt 
+**/*.xls 
+**/*.xml 
+**/*.xlw 
+**/*.xlr
+Models/*
+Models/**/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
