@@ -23,6 +23,7 @@
 **/*.xml 
 **/*.xlw 
 **/*.xlr
+**/*.zip
 Models/*
 Models/**/*
 
