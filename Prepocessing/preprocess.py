@@ -76,9 +76,10 @@ if __name__ == "__main__":
         f"{os.path.join(audioIndex[i][0])}" for i in range(len(audioIndex)) 
     ]
     labels = list(audioIndex[:, 1])
+    total = len(labels)
     currentProgress = 0
     for inFile in inputFiles:
-        if settings._SILENT != True: print(f"preprocessing: {'{0:.0f}%'.format(currentProgress/len(labels) * 100)}... ",end="\r")
+        if settings._SILENT != True: print(f"preprocessing: {'{0:.0f}%'.format(currentProgress/total * 100)}... ",end="\r")
         supported_file_types = ["mp3"]
         if inFile.split(".")[-1].lower() not in supported_file_types:
             continue # skip none mp3 files
