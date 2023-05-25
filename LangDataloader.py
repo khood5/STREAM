@@ -10,7 +10,7 @@ class LangDataloader(Dataset):
         index_file: str, 
         data_path: str,
         startIndex = 0, # default to start from begining of list
-        endIndex = None # default to grab the whole list (a.k.k arr[0:None] grabs whole thing)
+        endIndex = None, # default to grab the whole list (a.k.k arr[0:None] grabs whole thing)
     ):
         self.root_dir = data_path
         self.expermentSikeTrainsIndex = np.array(pd.read_csv(index_file,header=None))[startIndex:endIndex]
@@ -18,16 +18,15 @@ class LangDataloader(Dataset):
             f"{os.path.join(self.expermentSikeTrainsIndex[i][0])}" for i in range(len(self.expermentSikeTrainsIndex)) 
         ]
         self.targets = self.expermentSikeTrainsIndex[:, 1]
+        self.length = len(self.expermentSikeTrainsIndex)
 
     def __getitem__(self, index):
-        # inputCSVlines = pd.read_csv(os.path.join(self.root_dir,self.spikeTrains[index]), header=None).to_numpy()
-        y, sr = librosa.load(os.path.join(self.root_dir,self.spikeTrains[index]))
-        S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, fmax=8000)
+        inputCSVlines = np.loadtxt(open(os.path.join(self.root_dir,self.spikeTrains[index]), "rb"), delimiter=",")
         targetCSVLines = self.targets[index]
-        return np.array(S), np.array([targetCSVLines])
+        return np.array(inputCSVlines), np.array([targetCSVLines])
 
     def __len__(self):
-        return len(self.expermentSikeTrainsIndex)
+        return self.length
     
     def __list__(self):
         listData = []

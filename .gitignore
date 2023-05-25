@@ -24,6 +24,7 @@
 **/*.xlw 
 **/*.xlr
 **/*.zip
+**/trash
 Models/*
 Models/**/*
 
