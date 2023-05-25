@@ -1,7 +1,6 @@
 import librosa
 import os
 import csv
-import hashlib
 import pandas as pd
 import numpy as np
 import argparse
@@ -43,10 +42,10 @@ if __name__ == "__main__":
                         type=str)
     parser.add_argument('index_file', help='Index file for the input mp3 files with labels (should be a csv)\n',
                         type=str)
-    parser.add_argument('output_directory', help='Directory to place output files\n',
+    parser.add_argument('output_directory', help='Directory to place output files and new index file\n',
                     type=str)
-    # parser.add_argument('-b','--binary', help="switches to binary spikes events default is spikes events based on reaction intesity (floating point value)\n", 
-    #                     action=argparse.BooleanOptionalAction)
+    parser.add_argument('-s','--silent', help="switches to silent mode i.e. hides output\n", 
+                        action=argparse.BooleanOptionalAction)
     # parser.add_argument('-l','--length', help='''number of seconds to use for training (events after this time will not be included in the spike trains)\n\
     #                     DEFAULT: {}'''.format(DEFAULT_LENGTH), 
     #                     type=float,
@@ -57,6 +56,7 @@ if __name__ == "__main__":
     settings._INPUT_DIRECTORY = args.input_directory
     settings._INPUT_INDEX = args.index_file
     settings._OUTPUT_DIRECTORY = args.output_directory
+    settings._SILENT = args.silent
 
     if settings._SILENT != True:
         print(f"reading files from  :{Path(settings._INPUT_DIRECTORY)}")
@@ -76,7 +76,9 @@ if __name__ == "__main__":
         f"{os.path.join(audioIndex[i][0])}" for i in range(len(audioIndex)) 
     ]
     labels = list(audioIndex[:, 1])
+    currentProgress = 0
     for inFile in inputFiles:
+        if settings._SILENT != True: print(f"preprocessing: {'{0:.0f}%'.format(currentProgress/len(labels) * 100)}... ",end="\r")
         supported_file_types = ["mp3"]
         if inFile.split(".")[-1].lower() not in supported_file_types:
             continue # skip none mp3 files
@@ -86,6 +88,7 @@ if __name__ == "__main__":
         outFile = os.path.join(f"{settings._OUTPUT_DIRECTORY}", outFileName)
         np.savetxt(outFile, S, delimiter=",")
         indexes.append([outFileName,labels.pop(0)])
+        currentProgress = currentProgress + 1
     outputIndexFile = os.path.join(f"{settings._OUTPUT_DIRECTORY}",INDEX_FILE_NAME)
     with open(outputIndexFile, 'a+', newline='') as outFile:
         write = csv.writer(outFile)
